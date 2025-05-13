@@ -259,17 +259,22 @@ if __name__ == "__main__":
     with gzip.open(dataset_file_name, "rt") as f:
         deserialized = json.loads(f.read())
         episode = deserialized["episodes"][episode_idx]
+        # 设置机器人初始位置
         if "go2" in args_cli.task:
             env_cfg.scene.robot.init_state.pos = (episode["start_position"][0], episode["start_position"][1], episode["start_position"][2]+0.4)
         elif "h1" in args_cli.task:
             env_cfg.scene.robot.init_state.pos = (episode["start_position"][0], episode["start_position"][1], episode["start_position"][2]+1.0)
         else:
             env_cfg.scene.robot.init_state.pos = (episode["start_position"][0], episode["start_position"][1], episode["start_position"][2]+0.5)
-
+        # 设置标记物的位置
         env_cfg.scene.disk_1.init_state.pos = (episode["start_position"][0], episode["start_position"][1], episode["start_position"][2]+2.5)
+        # 终止点上方
         env_cfg.scene.disk_2.init_state.pos = (episode["reference_path"][-1][0], episode["reference_path"][-1][1], episode["reference_path"][-1][2]+2.5)
+        # 设置机器人的初始旋转
         wxyz_rot = episode["start_rotation"]
         init_rot = wxyz_rot
+
+        # habitat 格式数据 转为 isaac 格式数据
         # habitat2isaacsim_rot=math_utils.quat_from_euler_xyz(torch.tensor(0),torch.tensor(0),torch.tensor(0))
         # wxyz_rot = torch.tensor([episode["start_rotation"][3], episode["start_rotation"][0], episode["start_rotation"][1], episode["start_rotation"][2]])
         # convert from quaternion to euler angles
@@ -281,14 +286,14 @@ if __name__ == "__main__":
         # init_rot=(init_rot[3], init_rot[0], init_rot[1], init_rot[2])
         env_cfg.scene.robot.init_state.rot = (init_rot[0], init_rot[1], init_rot[2], init_rot[3])
         # import ipdb; ipdb.set_trace()
-        env_cfg.goals = episode["goals"]
+        env_cfg.goals = episode["goals"]  # 目标点，包含位置 position和半径 radius
         env_cfg.episode_id = episode["episode_id"]
-        env_cfg.scene_id = episode["scene_id"].split('/')[1]
+        env_cfg.scene_id = episode["scene_id"].split('/')[1]  # 加载的场景ID
         env_cfg.traj_id = episode["trajectory_id"]
-        env_cfg.instruction_text = episode["instruction"]["instruction_text"]
-        env_cfg.instruction_tokens = episode["instruction"]["instruction_tokens"]
-        env_cfg.reference_path = np.array(episode["reference_path"])
-        expert_locations = np.array(episode["gt_locations"])
+        env_cfg.instruction_text = episode["instruction"]["instruction_text"]  # 文本指令
+        env_cfg.instruction_tokens = episode["instruction"]["instruction_tokens"]  # 文本指令对应的token
+        env_cfg.reference_path = np.array(episode["reference_path"])  # 参考路径
+        expert_locations = np.array(episode["gt_locations"])  # 专家路径
         # expert_locations=expert_locations[:,[0,2,1]]
         # expert_locations[:,1] = -expert_locations[:,1]
         # import ipdb; ipdb.set_trace()
@@ -297,7 +302,7 @@ if __name__ == "__main__":
         env_cfg.expert_time = np.arange(env_cfg.expert_path_length)*1.0
     # scene_id = "1LXtFkjw3qL"
 
-    udf_file = os.path.join(ASSETS_DIR, f"matterport_usd/{env_cfg.scene_id}/{env_cfg.scene_id}.usd")
+    udf_file = os.path.join(ASSETS_DIR, f"matterport_usd/{env_cfg.scene_id}/{env_cfg.scene_id}.usd")  # 当前episode对应的场景文件
     if os.path.exists(udf_file):
         env_cfg.scene.terrain.obj_filepath = udf_file
     else:
