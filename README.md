@@ -7,7 +7,8 @@ The VLN-CE-Isaac Benchmark is a framework for evaluating Visual Language Navigat
   <img width="65%" src="./src/teaser.gif" alt="VLN-CE with Go2">
 </p>
 
-
+## TODO List
+- [ ] Release the VLA example and evaluation code
 
 
 ## Installation
@@ -34,7 +35,7 @@ The VLN-CE-Isaac Benchmark is a framework for evaluating Visual Language Navigat
     **Note**: This codebase was tested with Isaac Lab 1.1.0 and may not be compatible with newer versions. Please make sure to use the modified version of Isaac Lab provided below, which includes important bug fixes and updates. As Isaac Lab is under active development, we will consider supporting newer versions in the future.
 
     ```shell
-    git clone git@github.com:yang-zj1026/IsaacLab.git
+    git clone https://github.com/yang-zj1026/IsaacLab.git
     cd IsaacLab
     cd source/extensions
     ln -s {THIS_REPO_DIR}/isaaclab_exts/omni.isaac.vlnce .
@@ -83,8 +84,8 @@ If you use VLN-CE-Isaac in your work please consider citing our paper:
 
 ## Acknowledgements
 
-This project makes use of the following open source codebase:
-
+This project makes use of the following open-source codebases:
+- Isaac Lab: [https://github.com/isaac-sim/IsaacLab](https://github.com/isaac-sim/IsaacLab)
 - ViPlanner: [https://github.com/leggedrobotics/viplanner](https://github.com/leggedrobotics/viplanner)
 - VLN-CE: [https://github.com/jacobkrantz/VLN-CE](https://github.com/jacobkrantz/VLN-CE)
 
